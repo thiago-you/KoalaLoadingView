@@ -37,6 +37,16 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation "androidx.core:core-ktx:1.10.1"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // Kotlin
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2"
+
+    // Lifecycle
+    implementation(
+        [group: 'androidx.lifecycle', name: 'lifecycle-runtime-ktx', version: '2.6.1'],
+        [group: 'androidx.lifecycle', name: 'lifecycle-extensions', version: '2.2.0'],
+    )
     
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.13.2'

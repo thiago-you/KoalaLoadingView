@@ -1,103 +1,114 @@
 package you.thiago.koalaloadinglibrary
 
-import android.app.Dialog
-import android.os.Bundle
+import android.content.Context
 import android.text.TextUtils
-import android.view.Gravity
+import android.util.AttributeSet
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
+import android.widget.ImageView
 import android.widget.RelativeLayout
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.thiago.koalaloadinglibrary.R
+import kotlinx.coroutines.launch
 
 /**
  * Created by Thiago You on 2023/07.
  */
-class KoalaLoadingView : BaseDialogFragment() {
+class KoalaLoadingView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+) : RelativeLayout(context, attrs) {
     
     private lateinit var operatingAnim: Animation
-    private lateinit var graduallyTextView: GraduallyTextView
-    private lateinit var background: RelativeLayout
-    private lateinit var leaf: View
+    
+    private val content: View by lazy { findViewById(R.id.content) }
+    private val leaf: ImageView by lazy { findViewById(R.id.mouse) }
+    private val graduallyTextView: GraduallyTextView by lazy { findViewById(R.id.graduallyTextView) }
     
     private var viewText: String? = null
-    private var color = 0
-    private var mainDialog: Dialog? = null
+    
+    init {
+        val params = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+        val view = View.inflate(context, R.layout.koala_loading_simple, null)
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        mainDialog = Dialog(requireActivity(), R.style.cart_dialog).apply {
-            setContentView(R.layout.koala_loading_main)
-            window?.setGravity(Gravity.CENTER)
-        }
-
-        operatingAnim = RotateAnimation(
-                360f, 0f, Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 0.5f
-        )
-
-        operatingAnim.repeatCount = Animation.INFINITE
-        operatingAnim.duration = 2000
-        
-        val lin = LinearInterpolator()
-        operatingAnim.interpolator = lin
-        
-        mainDialog?.window?.decorView?.let { view ->
-            background = view.findViewById(R.id.background)
-
-            if (color != 0) {
-                val unwrappedDrawable = AppCompatResources.getDrawable(view.context, R.drawable.background)
-
-                unwrappedDrawable?.let {
-                    val wrappedDrawable = DrawableCompat.wrap(it)
-                    DrawableCompat.setTint(wrappedDrawable, ContextCompat.getColor(view.context, color))
-                    background.background = wrappedDrawable
-                }
-            }
-            
-            leaf = view.findViewById(R.id.mouse)
-            graduallyTextView = view.findViewById<View>(R.id.graduallyTextView) as GraduallyTextView
-
-            if (!TextUtils.isEmpty(viewText)) {
-                graduallyTextView.setText(viewText)
-            }
-        }
-
-        return mainDialog!!
+        addView(view, params)
+        setupView()
     }
 
-    override fun onResume() {
-        leaf.animation = operatingAnim
-        graduallyTextView.startLoading()
-        super.onResume()
-    }
-
-    override fun onPause() {
-        leaf.clearAnimation()
-        graduallyTextView.stopLoading()
-        super.onPause()
-    }
-
-    override fun onDestroyView() {
-        if (mainDialog?.isShowing == true) {
-            mainDialog?.dismiss()
-            mainDialog = null
+    fun launch() {
+        if (content.isVisible) {
+            stop()
+        } else {
+            start()
         }
-        super.onDestroyView()
+    }
+    
+    fun start() {
+        content.visibility = View.VISIBLE
+        launchAnimation()
+    }
+    
+    fun stop() {
+        content.visibility = View.GONE
+        stopAnimation()
     }
 
     fun setText(labelText: String?) {
         viewText = labelText
-    }
 
-    fun setClickCancelAble(flag: Boolean) {
-        this.isCancelable = flag
+        if (!TextUtils.isEmpty(viewText)) {
+            graduallyTextView.setText(viewText)
+        }
     }
+    
+    private fun setupView() {
+        operatingAnim = RotateAnimation(
+            360f, 0f, Animation.RELATIVE_TO_SELF, 0.5f,
+            Animation.RELATIVE_TO_SELF, 0.5f
+        )
 
-    fun setBackgroundColor(color: Int) {
-        this.color = color
+        operatingAnim.repeatCount = Animation.INFINITE
+        operatingAnim.duration = 2000
+
+        val lin = LinearInterpolator()
+        operatingAnim.interpolator = lin
+        
+        if (!TextUtils.isEmpty(viewText)) {
+            graduallyTextView.setText(viewText)
+        }
+    }
+    
+    private fun startAnimation() {
+        leaf.animation = operatingAnim
+        graduallyTextView.startLoading()
+    }
+    
+    private fun stopAnimation() {
+        leaf.clearAnimation()
+        graduallyTextView.stopLoading()
+    }
+    
+    private fun launchAnimation() {
+        findViewTreeLifecycleOwner()?.apply {
+            if (content.isVisible) {
+                lifecycleScope.launch {
+                    lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                        startAnimation()
+                    }
+                }
+    
+                lifecycleScope.launch {
+                    lifecycle.repeatOnLifecycle(Lifecycle.State.DESTROYED) {
+                        stopAnimation()
+                    }
+                }
+            }
+        }
     }
 }

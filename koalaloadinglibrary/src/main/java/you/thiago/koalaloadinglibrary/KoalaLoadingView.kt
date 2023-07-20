@@ -28,7 +28,7 @@ class KoalaLoadingView @JvmOverloads constructor(
     private lateinit var operatingAnim: Animation
     
     private val content: View by lazy { findViewById(R.id.content) }
-    private val leaf: ImageView by lazy { findViewById(R.id.mouse) }
+    private val leaf: ImageView by lazy { findViewById(R.id.leaf) }
     private val graduallyTextView: GraduallyTextView by lazy { findViewById(R.id.graduallyTextView) }
     
     private var viewText: String? = null

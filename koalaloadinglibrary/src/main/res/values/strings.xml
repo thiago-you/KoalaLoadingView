@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">koalaloadinglibrary</string>
-    <string name="loading">L O A D I N G ...</string>
+    <string name="loading">\ L O A D I N G ... /</string>
 </resources>

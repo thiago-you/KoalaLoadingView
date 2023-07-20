@@ -9,6 +9,8 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.findViewTreeLifecycleOwner
@@ -65,6 +67,10 @@ class KoalaLoadingView @JvmOverloads constructor(
         if (!TextUtils.isEmpty(viewText)) {
             graduallyTextView.setText(viewText)
         }
+    }
+
+    fun setTextColor(@ColorRes colorRes: Int) {
+        graduallyTextView.setTextColor(ContextCompat.getColor(context, colorRes))
     }
     
     private fun setupView() {

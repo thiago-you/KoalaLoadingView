@@ -10,7 +10,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:src="@drawable/mouse" />
+        android:src="@drawable/mouse"
+        tools:ignore="ContentDescription" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -28,8 +29,8 @@
             android:id="@+id/eye_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="3.5dp"
-            android:layout_marginTop="12.5dp"
+            android:layout_marginLeft="13.4dp"
+            android:layout_marginTop="21.5dp"
             android:src="@drawable/eyes" />
 
         <you.thiago.koalaloadinglibrary.EyelidView
@@ -44,8 +45,8 @@
             android:id="@+id/eye_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="28dp"
-            android:layout_marginTop="12.5dp"
+            android:layout_marginLeft="39dp"
+            android:layout_marginTop="21.5dp"
             android:src="@drawable/eyes" />
 
         <you.thiago.koalaloadinglibrary.EyelidView

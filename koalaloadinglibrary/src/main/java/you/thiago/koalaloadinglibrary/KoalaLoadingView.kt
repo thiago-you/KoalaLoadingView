@@ -17,7 +17,7 @@ import com.thiago.koalaloadinglibrary.R
 /**
  * Created by Administrator on 2016/3/30.
  */
-class CatLoadingView : BaseDialogFragment() {
+class KoalaLoadingView : BaseDialogFragment() {
     private lateinit var operatingAnim: Animation
     private lateinit var eyeLeftAnim: Animation
     private lateinit var eyeRightAnim: Animation
@@ -34,7 +34,7 @@ class CatLoadingView : BaseDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         mainDialog = Dialog(requireActivity(), R.style.cart_dialog).apply {
-            setContentView(R.layout.catloading_main)
+            setContentView(R.layout.koalaloading_main)
             window?.setGravity(Gravity.CENTER)
         }
         operatingAnim = RotateAnimation(

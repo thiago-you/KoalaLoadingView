@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.roger.catloadingview">
+    package="com.thiago.catloadingview">
 
     <application
         android:theme="@style/AppTheme"
@@ -11,7 +11,7 @@
         <activity
             android:theme="@style/AppTheme.NoActionBar"
             android:exported="true"
-            android:name=".MainActivity">
+            android:name="you.thiago.koalaloadingview.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

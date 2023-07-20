@@ -18,7 +18,7 @@ Import this project into Android Studio... it's built with it.
 #### Gradle
 
 ```
-implementation 'com.roger.catloadinglibrary:catloadinglibrary:1.0.9'
+implementation 'com.roger.koalaloadinglibrary:koalaloadinglibrary:1.0.9'
 ```
 
 ####  config in java code

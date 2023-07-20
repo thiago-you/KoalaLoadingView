@@ -15,68 +15,102 @@ import androidx.core.graphics.drawable.DrawableCompat
 import com.thiago.koalaloadinglibrary.R
 
 /**
- * Created by Thiago You on 2023/07.
+ * Created by Administrator on 2016/3/30.
  */
-class KoalaLoadingView : BaseDialogFragment() {
-    
+class CatLoadingView : BaseDialogFragment() {
     private lateinit var operatingAnim: Animation
+    private lateinit var eyeLeftAnim: Animation
+    private lateinit var eyeRightAnim: Animation
+    private lateinit var eyeLeft: View
+    private lateinit var eyeRight: View
+    private lateinit var eyelidLeft: EyelidView
+    private lateinit var eyelidRight: EyelidView
     private lateinit var graduallyTextView: GraduallyTextView
     private lateinit var background: RelativeLayout
-    private lateinit var leaf: View
-    
+    private lateinit var mouse: View
     private var viewText: String? = null
     private var color = 0
     private var mainDialog: Dialog? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         mainDialog = Dialog(requireActivity(), R.style.cart_dialog).apply {
-            setContentView(R.layout.koala_loading_main)
+            setContentView(R.layout.cat_loading_main)
             window?.setGravity(Gravity.CENTER)
         }
-
         operatingAnim = RotateAnimation(
                 360f, 0f, Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF, 0.5f
         )
-
         operatingAnim.repeatCount = Animation.INFINITE
         operatingAnim.duration = 2000
-        
+        eyeLeftAnim = RotateAnimation(
+                360f, 0f, Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f
+        )
+        eyeLeftAnim.repeatCount = Animation.INFINITE
+        eyeLeftAnim.duration = 2000
+        eyeRightAnim = RotateAnimation(
+                360f, 0f, Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f
+        )
+        eyeRightAnim.repeatCount = Animation.INFINITE
+        eyeRightAnim.duration = 2000
         val lin = LinearInterpolator()
         operatingAnim.interpolator = lin
-        
+        eyeLeftAnim.interpolator = lin
+        eyeRightAnim.interpolator = lin
         mainDialog?.window?.decorView?.let { view ->
             background = view.findViewById(R.id.background)
-
             if (color != 0) {
                 val unwrappedDrawable = AppCompatResources.getDrawable(view.context, R.drawable.background)
-
                 unwrappedDrawable?.let {
                     val wrappedDrawable = DrawableCompat.wrap(it)
                     DrawableCompat.setTint(wrappedDrawable, ContextCompat.getColor(view.context, color))
                     background.background = wrappedDrawable
                 }
             }
-            
-            leaf = view.findViewById(R.id.mouse)
-            graduallyTextView = view.findViewById<View>(R.id.graduallyTextView) as GraduallyTextView
-
+            mouse = view.findViewById(R.id.mouse)
+            eyeLeft = view.findViewById(R.id.eye_left)
+            eyeRight = view.findViewById(R.id.eye_right)
+            eyelidLeft = view.findViewById<View>(R.id.eyelid_left) as EyelidView
+            eyelidLeft.setColor(ContextCompat.getColor(requireContext(), R.color.eyelid))
+            eyelidLeft.setFromFull(true)
+            eyelidRight = view.findViewById<View>(R.id.eyelid_right) as EyelidView
+            eyelidRight.setColor(ContextCompat.getColor(requireContext(), R.color.eyelid))
+            eyelidRight.setFromFull(true)
+            graduallyTextView =
+                    view.findViewById<View>(R.id.graduallyTextView) as GraduallyTextView
             if (!TextUtils.isEmpty(viewText)) {
                 graduallyTextView.setText(viewText)
             }
+            operatingAnim.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation) {}
+                override fun onAnimationEnd(animation: Animation) {}
+                override fun onAnimationRepeat(animation: Animation) {
+                    eyelidLeft.resetAnimator()
+                    eyelidRight.resetAnimator()
+                }
+            })
         }
-
         return mainDialog!!
     }
 
     override fun onResume() {
-        leaf.animation = operatingAnim
+        mouse.animation = operatingAnim
+        eyeLeft.animation = eyeLeftAnim
+        eyeRight.animation = eyeRightAnim
+        eyelidLeft.startLoading()
+        eyelidRight.startLoading()
         graduallyTextView.startLoading()
         super.onResume()
     }
 
     override fun onPause() {
-        leaf.clearAnimation()
+        mouse.clearAnimation()
+        eyeLeft.clearAnimation()
+        eyeRight.clearAnimation()
+        eyelidLeft.stopLoading()
+        eyelidRight.stopLoading()
         graduallyTextView.stopLoading()
         super.onPause()
     }

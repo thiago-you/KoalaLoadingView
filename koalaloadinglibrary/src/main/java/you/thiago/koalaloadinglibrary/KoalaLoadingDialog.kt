@@ -10,6 +10,7 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import android.widget.RelativeLayout
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.thiago.koalaloadinglibrary.R
@@ -21,7 +22,7 @@ class KoalaLoadingDialog : BaseDialogFragment() {
     
     private lateinit var operatingAnim: Animation
     private lateinit var graduallyTextView: GraduallyTextView
-    private lateinit var background: RelativeLayout
+    private lateinit var background: ConstraintLayout
     private lateinit var leaf: View
     
     private var viewText: String? = null
@@ -30,7 +31,7 @@ class KoalaLoadingDialog : BaseDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         mainDialog = Dialog(requireActivity(), R.style.cart_dialog).apply {
-            setContentView(R.layout.koala_loading_main)
+            setContentView(R.layout.koala_loading_dialog)
             window?.setGravity(Gravity.CENTER)
         }
 
@@ -58,7 +59,7 @@ class KoalaLoadingDialog : BaseDialogFragment() {
                 }
             }
             
-            leaf = view.findViewById(R.id.mouse)
+            leaf = view.findViewById(R.id.leaf)
             graduallyTextView = view.findViewById<View>(R.id.graduallyTextView) as GraduallyTextView
 
             if (!TextUtils.isEmpty(viewText)) {

@@ -8,7 +8,6 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
-import android.widget.RelativeLayout
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -20,10 +19,10 @@ import com.thiago.koalaloadinglibrary.R
  */
 class KoalaLoadingDialog : BaseDialogFragment() {
     
-    private lateinit var operatingAnim: Animation
-    private lateinit var graduallyTextView: GraduallyTextView
-    private lateinit var background: ConstraintLayout
-    private lateinit var leaf: View
+    private var operatingAnim: Animation? = null
+    private var graduallyTextView: GraduallyTextView? = null
+    private var background: ConstraintLayout? = null
+    private var leaf: View? = null
     
     private var viewText: String? = null
     private var color = 0
@@ -40,11 +39,11 @@ class KoalaLoadingDialog : BaseDialogFragment() {
                 Animation.RELATIVE_TO_SELF, 0.5f
         )
 
-        operatingAnim.repeatCount = Animation.INFINITE
-        operatingAnim.duration = 2000
+        operatingAnim?.repeatCount = Animation.INFINITE
+        operatingAnim?.duration = 2000
         
         val lin = LinearInterpolator()
-        operatingAnim.interpolator = lin
+        operatingAnim?.interpolator = lin
         
         mainDialog?.window?.decorView?.let { view ->
             background = view.findViewById(R.id.background)
@@ -55,7 +54,7 @@ class KoalaLoadingDialog : BaseDialogFragment() {
                 unwrappedDrawable?.let {
                     val wrappedDrawable = DrawableCompat.wrap(it)
                     DrawableCompat.setTint(wrappedDrawable, ContextCompat.getColor(view.context, color))
-                    background.background = wrappedDrawable
+                    background?.background = wrappedDrawable
                 }
             }
             
@@ -63,7 +62,7 @@ class KoalaLoadingDialog : BaseDialogFragment() {
             graduallyTextView = view.findViewById<View>(R.id.graduallyTextView) as GraduallyTextView
 
             if (!TextUtils.isEmpty(viewText)) {
-                graduallyTextView.setText(viewText)
+                graduallyTextView?.setText(viewText)
             }
         }
 
@@ -71,14 +70,14 @@ class KoalaLoadingDialog : BaseDialogFragment() {
     }
 
     override fun onResume() {
-        leaf.animation = operatingAnim
-        graduallyTextView.startLoading()
+        leaf?.animation = operatingAnim
+        graduallyTextView?.startLoading()
         super.onResume()
     }
 
     override fun onPause() {
-        leaf.clearAnimation()
-        graduallyTextView.stopLoading()
+        leaf?.clearAnimation()
+        graduallyTextView?.stopLoading()
         super.onPause()
     }
 

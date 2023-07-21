@@ -27,7 +27,7 @@ class KoalaLoadingView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
 ) : RelativeLayout(context, attrs) {
     
-    private lateinit var operatingAnim: Animation
+    private var operatingAnim: Animation? = null
     
     private val content: View by lazy { findViewById(R.id.content) }
     private val leaf: ImageView by lazy { findViewById(R.id.leaf) }
@@ -79,11 +79,11 @@ class KoalaLoadingView @JvmOverloads constructor(
             Animation.RELATIVE_TO_SELF, 0.5f
         )
 
-        operatingAnim.repeatCount = Animation.INFINITE
-        operatingAnim.duration = 2000
+        operatingAnim?.repeatCount = Animation.INFINITE
+        operatingAnim?.duration = 2000
 
         val lin = LinearInterpolator()
-        operatingAnim.interpolator = lin
+        operatingAnim?.interpolator = lin
         
         if (!TextUtils.isEmpty(viewText)) {
             graduallyTextView.setText(viewText)

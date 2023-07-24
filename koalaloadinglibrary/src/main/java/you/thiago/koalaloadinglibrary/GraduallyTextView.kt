@@ -17,7 +17,7 @@ class GraduallyTextView : AppCompatEditText {
     private lateinit var paint: Paint
     private lateinit var valueAnimator: ValueAnimator
 
-    private lateinit var charSequence: CharSequence
+    private var charSequence: CharSequence? = null
     private var startY = 0
     private var progress = 0f
     private var isLoading = false
@@ -128,13 +128,15 @@ class GraduallyTextView : AppCompatEditText {
             paint.alpha = (255 * (progress % singleDuration / singleDuration)).toInt()
             val lastOne = (progress / singleDuration).toInt()
             if (lastOne < textLength) {
-                canvas.drawText(
-                    charSequence[lastOne].toString(), 0, 1,
-                    localScaleX + paint.measureText(
-                        charSequence.subSequence(0, lastOne).toString()
-                    ),
-                    height / 2.toFloat(), paint
-                )
+                charSequence?.get(lastOne)?.let {
+                    canvas.drawText(
+                        it.toString(), 0, 1,
+                        localScaleX + paint.measureText(
+                            charSequence?.subSequence(0, lastOne).toString()
+                        ),
+                        height / 2.toFloat(), paint
+                    )
+                }
             }
         }
     }
